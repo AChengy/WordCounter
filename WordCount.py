@@ -1,4 +1,6 @@
 import urllib2 as url
+from scipy import spatial
+
 iterator = 0
 urls = ["https://www.csuohio.edu/engineering/eecs/faculty-staff", "http://engineering.case.edu/eecs/",
         "http://my.clevelandclinic.org/research", "https://en.wikipedia.org/wiki/Data_mining",
@@ -18,6 +20,7 @@ while iterator < 5:
     #print words
     wordCounts.append(words)
     iterator += 1
+    f.close()
 
 #print wordCounts
 
@@ -31,3 +34,37 @@ while iterator < 5:
         wordCounts[iterator]['mining']
     iterator += 1
 
+#create the vectors for cosine similarity analysis
+vectors = []
+
+for dict in wordCounts:
+    temp = []
+    for key, value in dict.iteritems():
+        temp.append(value)
+
+    vectors.append(temp)
+
+#do the cosinie similarity calculations
+cosineValues = []
+i = 0
+
+while i < 5:
+    j = 0
+    temp = []
+    while j < 5:
+        temp.append(1 - spatial.distance.cosine(vectors[i],vectors[j]))
+        j+=1
+    cosineValues.append(temp)
+    i+=1
+
+#print cosineValues
+
+iterator = 0
+print '\n\n\n'
+print '\t\t\t\t\t<--Cosine Similarity Matrix For All Documents-->'
+print '\t\t\t\t  Doc1\t\t\t  Doc2\t\t\t  Doc3\t\t\t  Doc4\t\t\t  Doc5'
+while iterator < 5:
+    print 'Doc[',iterator+1,']->\t\t%1.6f\t\t%1.6f\t\t%1.6f\t\t%1.6f\t\t%1.6f'% \
+            (cosineValues[iterator][0],cosineValues[iterator][1],cosineValues[iterator][2], \
+            cosineValues[iterator][3],cosineValues[iterator][4])
+    iterator+=1
